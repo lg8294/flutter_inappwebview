@@ -24,36 +24,36 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
   void initState() {
     super.initState();
 
-    contextMenu = ContextMenu(
-        menuItems: [
-          ContextMenuItem(
-              androidId: 1,
-              iosId: "1",
-              title: "Special",
-              action: () async {
-                print("Menu item Special clicked!");
-                print(await webView.getSelectedText());
-                await webView.clearFocus();
-              })
-        ],
-        options: ContextMenuOptions(hideDefaultSystemContextMenuItems: true),
-        onCreateContextMenu: (hitTestResult) async {
-          print("onCreateContextMenu");
-          print(hitTestResult.extra);
-          print(await webView.getSelectedText());
-        },
-        onHideContextMenu: () {
-          print("onHideContextMenu");
-        },
-        onContextMenuActionItemClicked: (contextMenuItemClicked) async {
-          var id = (Platform.isAndroid)
-              ? contextMenuItemClicked.androidId
-              : contextMenuItemClicked.iosId;
-          print("onContextMenuActionItemClicked: " +
-              id.toString() +
-              " " +
-              contextMenuItemClicked.title);
-        });
+//    contextMenu = ContextMenu(
+//        menuItems: [
+//          ContextMenuItem(
+//              androidId: 1,
+//              iosId: "1",
+//              title: "Special",
+//              action: () async {
+//                print("Menu item Special clicked!");
+//                print(await webView.getSelectedText());
+//                await webView.clearFocus();
+//              })
+//        ],
+//        options: ContextMenuOptions(hideDefaultSystemContextMenuItems: true),
+//        onCreateContextMenu: (hitTestResult) async {
+//          print("onCreateContextMenu");
+//          print(hitTestResult.extra);
+//          print(await webView.getSelectedText());
+//        },
+//        onHideContextMenu: () {
+//          print("onHideContextMenu");
+//        },
+//        onContextMenuActionItemClicked: (contextMenuItemClicked) async {
+//          var id = (Platform.isAndroid)
+//              ? contextMenuItemClicked.androidId
+//              : contextMenuItemClicked.iosId;
+//          print("onContextMenuActionItemClicked: " +
+//              id.toString() +
+//              " " +
+//              contextMenuItemClicked.title);
+//        });
   }
 
   @override
@@ -85,7 +85,7 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
                   BoxDecoration(border: Border.all(color: Colors.blueAccent)),
               child: InAppWebView(
                   contextMenu: contextMenu,
-                  initialUrl: "https://github.com/flutter",
+                  initialUrl: "http://192.168.1.61:8081/",
                   // initialFile: "assets/index.html",
                   initialHeaders: {},
                   initialOptions: InAppWebViewGroupOptions(
