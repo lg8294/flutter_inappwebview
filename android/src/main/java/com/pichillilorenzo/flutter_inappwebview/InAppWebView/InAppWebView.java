@@ -31,15 +31,18 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.CookieManager;
-import android.webkit.DownloadListener;
-import android.webkit.ValueCallback;
-import android.webkit.WebBackForwardList;
-import android.webkit.WebChromeClient;
-import android.webkit.WebHistoryItem;
-import android.webkit.WebSettings;
-import android.webkit.WebStorage;
-import android.webkit.WebViewClient;
+
+import com.tencent.smtt.export.external.interfaces.IX5WebViewBase;
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.DownloadListener;
+import com.tencent.smtt.sdk.ValueCallback;
+import com.tencent.smtt.sdk.WebBackForwardList;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebHistoryItem;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebStorage;
+import com.tencent.smtt.sdk.WebViewClient;
+//import IX5WebViewBase.FindListener;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -90,7 +93,7 @@ final public class InAppWebView extends InputAwareWebView {
   public Integer windowId;
   public InAppWebViewClient inAppWebViewClient;
   public InAppWebViewChromeClient inAppWebViewChromeClient;
-  public InAppWebViewRenderProcessClient inAppWebViewRenderProcessClient;
+//  public InAppWebViewRenderProcessClient inAppWebViewRenderProcessClient;
   public JavaScriptBridgeInterface javaScriptBridgeInterface;
   public InAppWebViewOptions options;
   public boolean isLoading = false;
@@ -666,10 +669,10 @@ final public class InAppWebView extends InputAwareWebView {
     inAppWebViewClient = new InAppWebViewClient((isFromInAppBrowserActivity) ? inAppBrowserActivity : flutterWebView);
     setWebViewClient(inAppWebViewClient);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && WebViewFeature.isFeatureSupported(WebViewFeature.WEB_VIEW_RENDERER_CLIENT_BASIC_USAGE)) {
-      inAppWebViewRenderProcessClient = new InAppWebViewRenderProcessClient((isFromInAppBrowserActivity) ? inAppBrowserActivity : flutterWebView);
-      WebViewCompat.setWebViewRenderProcessClient(this, inAppWebViewRenderProcessClient);
-    }
+//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && WebViewFeature.isFeatureSupported(WebViewFeature.WEB_VIEW_RENDERER_CLIENT_BASIC_USAGE)) {
+//      inAppWebViewRenderProcessClient = new InAppWebViewRenderProcessClient((isFromInAppBrowserActivity) ? inAppBrowserActivity : flutterWebView);
+//      WebViewCompat.setWebViewRenderProcessClient(this, inAppWebViewRenderProcessClient);
+//    }
 
     if (options.useOnDownloadStart)
       setDownloadListener(new DownloadStartListener());
@@ -685,8 +688,8 @@ final public class InAppWebView extends InputAwareWebView {
     settings.setDisplayZoomControls(options.displayZoomControls);
     settings.setSupportMultipleWindows(options.supportMultipleWindows);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-      settings.setSafeBrowsingEnabled(options.safeBrowsingEnabled);
+//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+//      settings.setSafeBrowsingEnabled(options.safeBrowsingEnabled);
 
     settings.setMediaPlaybackRequiresUserGesture(options.mediaPlaybackRequiresUserGesture);
 
@@ -743,27 +746,27 @@ final public class InAppWebView extends InputAwareWebView {
     settings.setDefaultFixedFontSize(options.defaultFixedFontSize);
     settings.setDefaultFontSize(options.defaultFontSize);
     settings.setDefaultTextEncodingName(options.defaultTextEncodingName);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && options.disabledActionModeMenuItems != null)
-      settings.setDisabledActionModeMenuItems(options.disabledActionModeMenuItems);
+//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && options.disabledActionModeMenuItems != null)
+//      settings.setDisabledActionModeMenuItems(options.disabledActionModeMenuItems);
     settings.setFantasyFontFamily(options.fantasyFontFamily);
     settings.setFixedFontFamily(options.fixedFontFamily);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && options.forceDark != null)
-      settings.setForceDark(options.forceDark);
+//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && options.forceDark != null)
+//      settings.setForceDark(options.forceDark);
     settings.setGeolocationEnabled(options.geolocationEnabled);
-    if (options.layoutAlgorithm != null) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && options.layoutAlgorithm.equals(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING)) {
-        settings.setLayoutAlgorithm(options.layoutAlgorithm);
-      } else {
-        settings.setLayoutAlgorithm(options.layoutAlgorithm);
-      }
-    }
+//    if (options.layoutAlgorithm != null) {
+//      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && options.layoutAlgorithm.equals(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING)) {
+//        settings.setLayoutAlgorithm(options.layoutAlgorithm);
+//      } else {
+//        settings.setLayoutAlgorithm(options.layoutAlgorithm);
+//      }
+//    }
     settings.setLoadsImagesAutomatically(options.loadsImagesAutomatically);
     settings.setMinimumFontSize(options.minimumFontSize);
     settings.setMinimumLogicalFontSize(options.minimumLogicalFontSize);
     setInitialScale(options.initialScale);
     settings.setNeedInitialFocus(options.needInitialFocus);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-      settings.setOffscreenPreRaster(options.offscreenPreRaster);
+//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+//      settings.setOffscreenPreRaster(options.offscreenPreRaster);
     settings.setSansSerifFontFamily(options.sansSerifFontFamily);
     settings.setSerifFontFamily(options.serifFontFamily);
     settings.setStandardFontFamily(options.standardFontFamily);
@@ -816,7 +819,7 @@ final public class InAppWebView extends InputAwareWebView {
       contentBlockerHandler.getRuleList().add(new ContentBlocker(trigger, action));
     }
 
-    setFindListener(new FindListener() {
+    setFindListener(new IX5WebViewBase.FindListener() {
       @Override
       public void onFindResultReceived(int activeMatchOrdinal, int numberOfMatches, boolean isDoneCounting) {
         Map<String, Object> obj = new HashMap<>();
@@ -1175,8 +1178,8 @@ final public class InAppWebView extends InputAwareWebView {
     if (newOptionsMap.get("displayZoomControls") != null && options.displayZoomControls != newOptions.displayZoomControls)
       settings.setDisplayZoomControls(newOptions.displayZoomControls);
 
-    if (newOptionsMap.get("safeBrowsingEnabled") != null && options.safeBrowsingEnabled != newOptions.safeBrowsingEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-      settings.setSafeBrowsingEnabled(newOptions.safeBrowsingEnabled);
+//    if (newOptionsMap.get("safeBrowsingEnabled") != null && options.safeBrowsingEnabled != newOptions.safeBrowsingEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+//      settings.setSafeBrowsingEnabled(newOptions.safeBrowsingEnabled);
 
     if (newOptionsMap.get("mediaPlaybackRequiresUserGesture") != null && options.mediaPlaybackRequiresUserGesture != newOptions.mediaPlaybackRequiresUserGesture)
       settings.setMediaPlaybackRequiresUserGesture(newOptions.mediaPlaybackRequiresUserGesture);
@@ -1283,10 +1286,10 @@ final public class InAppWebView extends InputAwareWebView {
     if (newOptionsMap.get("defaultTextEncodingName") != null && !options.defaultTextEncodingName.equals(newOptions.defaultTextEncodingName))
       settings.setDefaultTextEncodingName(newOptions.defaultTextEncodingName);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-      if (newOptionsMap.get("disabledActionModeMenuItems") != null && (options.disabledActionModeMenuItems == null ||
-            !options.disabledActionModeMenuItems.equals(newOptions.disabledActionModeMenuItems)))
-        settings.setDisabledActionModeMenuItems(newOptions.disabledActionModeMenuItems);
+//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+//      if (newOptionsMap.get("disabledActionModeMenuItems") != null && (options.disabledActionModeMenuItems == null ||
+//            !options.disabledActionModeMenuItems.equals(newOptions.disabledActionModeMenuItems)))
+//        settings.setDisabledActionModeMenuItems(newOptions.disabledActionModeMenuItems);
 
     if (newOptionsMap.get("fantasyFontFamily") != null && !options.fantasyFontFamily.equals(newOptions.fantasyFontFamily))
       settings.setFantasyFontFamily(newOptions.fantasyFontFamily);
@@ -1294,20 +1297,20 @@ final public class InAppWebView extends InputAwareWebView {
     if (newOptionsMap.get("fixedFontFamily") != null && !options.fixedFontFamily.equals(newOptions.fixedFontFamily))
       settings.setFixedFontFamily(newOptions.fixedFontFamily);
 
-    if (newOptionsMap.get("forceDark") != null && !options.forceDark.equals(newOptions.forceDark))
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-        settings.setForceDark(newOptions.forceDark);
+//    if (newOptionsMap.get("forceDark") != null && !options.forceDark.equals(newOptions.forceDark))
+//      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+//        settings.setForceDark(newOptions.forceDark);
 
     if (newOptionsMap.get("geolocationEnabled") != null && options.geolocationEnabled != newOptions.geolocationEnabled)
       settings.setGeolocationEnabled(newOptions.geolocationEnabled);
 
-    if (newOptionsMap.get("layoutAlgorithm") != null && options.layoutAlgorithm != newOptions.layoutAlgorithm) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && newOptions.layoutAlgorithm.equals(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING)) {
-        settings.setLayoutAlgorithm(newOptions.layoutAlgorithm);
-      } else {
-        settings.setLayoutAlgorithm(newOptions.layoutAlgorithm);
-      }
-    }
+//    if (newOptionsMap.get("layoutAlgorithm") != null && options.layoutAlgorithm != newOptions.layoutAlgorithm) {
+//      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && newOptions.layoutAlgorithm.equals(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING)) {
+//        settings.setLayoutAlgorithm(newOptions.layoutAlgorithm);
+//      } else {
+//        settings.setLayoutAlgorithm(newOptions.layoutAlgorithm);
+//      }
+//    }
 
     if (newOptionsMap.get("loadWithOverviewMode") != null && options.loadWithOverviewMode != newOptions.loadWithOverviewMode)
       settings.setLoadWithOverviewMode(newOptions.loadWithOverviewMode);
@@ -1327,9 +1330,9 @@ final public class InAppWebView extends InputAwareWebView {
     if (newOptionsMap.get("needInitialFocus") != null && options.needInitialFocus != newOptions.needInitialFocus)
       settings.setNeedInitialFocus(newOptions.needInitialFocus);
 
-    if (newOptionsMap.get("offscreenPreRaster") != null && options.offscreenPreRaster != newOptions.offscreenPreRaster)
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        settings.setOffscreenPreRaster(newOptions.offscreenPreRaster);
+//    if (newOptionsMap.get("offscreenPreRaster") != null && options.offscreenPreRaster != newOptions.offscreenPreRaster)
+//      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+//        settings.setOffscreenPreRaster(newOptions.offscreenPreRaster);
 
     if (newOptionsMap.get("sansSerifFontFamily") != null && !options.sansSerifFontFamily.equals(newOptions.sansSerifFontFamily))
       settings.setSansSerifFontFamily(newOptions.sansSerifFontFamily);
@@ -1587,7 +1590,7 @@ final public class InAppWebView extends InputAwareWebView {
       String jobName = getTitle() + " Document";
 
       // Get a printCurrentPage adapter instance
-      PrintDocumentAdapter printAdapter = createPrintDocumentAdapter(jobName);
+      PrintDocumentAdapter printAdapter = (PrintDocumentAdapter) createPrintDocumentAdapter(jobName);
 
       // Create a printCurrentPage job with name and adapter instance
       printManager.print(jobName, printAdapter,
@@ -1660,171 +1663,171 @@ final public class InAppWebView extends InputAwareWebView {
     return connection;
   }
 
-  @Override
-  public ActionMode startActionMode(ActionMode.Callback callback) {
-    return rebuildActionMode(super.startActionMode(callback), callback);
-  }
+//  @Override
+//  public ActionMode startActionMode(ActionMode.Callback callback) {
+//    return rebuildActionMode(super.startActionMode(callback), callback);
+//  }
+//
+//  @RequiresApi(api = Build.VERSION_CODES.M)
+//  @Override
+//  public ActionMode startActionMode(ActionMode.Callback callback, int type) {
+//    return rebuildActionMode(super.startActionMode(callback, type), callback);
+//  }
+//
+//  public ActionMode rebuildActionMode(
+//          final ActionMode actionMode,
+//          final ActionMode.Callback callback
+//  ) {
+//    boolean hasBeenRemovedAndRebuilt = false;
+//    if (floatingContextMenu != null) {
+//      hideContextMenu();
+//      hasBeenRemovedAndRebuilt = true;
+//    }
+//    if (actionMode == null) {
+//      return null;
+//    }
+//
+//    Menu actionMenu = actionMode.getMenu();
+//    if (options.disableContextMenu) {
+//      actionMenu.clear();
+//      return actionMode;
+//    }
+//
+//    floatingContextMenu = (LinearLayout) LayoutInflater.from(this.getContext())
+//            .inflate(R.layout.floating_action_mode, this, false);
+//    HorizontalScrollView horizontalScrollView = (HorizontalScrollView) floatingContextMenu.getChildAt(0);
+//    LinearLayout menuItemListLayout = (LinearLayout) horizontalScrollView.getChildAt(0);
+//
+//    List<Map<String, Object>> customMenuItems = new ArrayList<>();
+//    ContextMenuOptions contextMenuOptions = new ContextMenuOptions();
+//    if (contextMenu != null) {
+//      customMenuItems = (List<Map<String, Object>>) contextMenu.get("menuItems");
+//      Map<String, Object> contextMenuOptionsMap = (Map<String, Object>) contextMenu.get("options");
+//     if (contextMenuOptionsMap != null) {
+//       contextMenuOptions.parse(contextMenuOptionsMap);
+//     }
+//    }
+//    customMenuItems = customMenuItems == null ? new ArrayList<Map<String, Object>>() : customMenuItems;
+//
+//    if (contextMenuOptions.hideDefaultSystemContextMenuItems == null || !contextMenuOptions.hideDefaultSystemContextMenuItems) {
+//      for (int i = 0; i < actionMenu.size(); i++) {
+//        final MenuItem menuItem = actionMenu.getItem(i);
+//        final int itemId = menuItem.getItemId();
+//        final String itemTitle = menuItem.getTitle().toString();
+//        TextView text = (TextView) LayoutInflater.from(this.getContext())
+//                .inflate(R.layout.floating_action_mode_item, this, false);
+//        text.setText(itemTitle);
+//        text.setOnClickListener(new OnClickListener() {
+//          @Override
+//          public void onClick(View v) {
+//            hideContextMenu();
+//            callback.onActionItemClicked(actionMode, menuItem);
+//
+//            Map<String, Object> obj = new HashMap<>();
+//            if (inAppBrowserActivity != null)
+//              obj.put("uuid", inAppBrowserActivity.uuid);
+//            obj.put("androidId", itemId);
+//            obj.put("iosId", null);
+//            obj.put("title", itemTitle);
+//            channel.invokeMethod("onContextMenuActionItemClicked", obj);
+//          }
+//        });
+//        if (floatingContextMenu != null) {
+//          menuItemListLayout.addView(text);
+//        }
+//      }
+//    }
+//
+//    for (final Map<String, Object> menuItem : customMenuItems) {
+//      final int itemId = (int) menuItem.get("androidId");
+//      final String itemTitle = (String) menuItem.get("title");
+//      TextView text = (TextView) LayoutInflater.from(this.getContext())
+//              .inflate(R.layout.floating_action_mode_item, this, false);
+//      text.setText(itemTitle);
+//      text.setOnClickListener(new OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//          hideContextMenu();
+//
+//          Map<String, Object> obj = new HashMap<>();
+//          if (inAppBrowserActivity != null)
+//            obj.put("uuid", inAppBrowserActivity.uuid);
+//          obj.put("androidId", itemId);
+//          obj.put("iosId", null);
+//          obj.put("title", itemTitle);
+//          channel.invokeMethod("onContextMenuActionItemClicked", obj);
+//        }
+//      });
+//      if (floatingContextMenu != null) {
+//        menuItemListLayout.addView(text);
+//
+//      }
+//    }
+//
+//    final int x = (lastTouch != null) ? lastTouch.x : 0;
+//    final int y = (lastTouch != null) ? lastTouch.y : 0;
+//    contextMenuPoint = new Point(x, y);
+//
+//    if (floatingContextMenu != null) {
+//      floatingContextMenu.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//
+//        @Override
+//        public void onGlobalLayout() {
+//          if (floatingContextMenu != null) {
+//            floatingContextMenu.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//            if (getSettings().getJavaScriptEnabled()) {
+//              onScrollStopped();
+//            } else {
+//              onFloatingActionGlobalLayout(x, y);
+//            }
+//          }
+//        }
+//      });
+//      addView(floatingContextMenu, new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, x, y));
+//      if (hasBeenRemovedAndRebuilt) {
+//        sendOnCreateContextMenuEvent();
+//      }
+//      if (checkContextMenuShouldBeClosedTask != null) {
+//        checkContextMenuShouldBeClosedTask.run();
+//      }
+//    }
+//    actionMenu.clear();
+//
+//    return actionMode;
+//  }
 
-  @RequiresApi(api = Build.VERSION_CODES.M)
-  @Override
-  public ActionMode startActionMode(ActionMode.Callback callback, int type) {
-    return rebuildActionMode(super.startActionMode(callback, type), callback);
-  }
-
-  public ActionMode rebuildActionMode(
-          final ActionMode actionMode,
-          final ActionMode.Callback callback
-  ) {
-    boolean hasBeenRemovedAndRebuilt = false;
-    if (floatingContextMenu != null) {
-      hideContextMenu();
-      hasBeenRemovedAndRebuilt = true;
-    }
-    if (actionMode == null) {
-      return null;
-    }
-
-    Menu actionMenu = actionMode.getMenu();
-    if (options.disableContextMenu) {
-      actionMenu.clear();
-      return actionMode;
-    }
-
-    floatingContextMenu = (LinearLayout) LayoutInflater.from(this.getContext())
-            .inflate(R.layout.floating_action_mode, this, false);
-    HorizontalScrollView horizontalScrollView = (HorizontalScrollView) floatingContextMenu.getChildAt(0);
-    LinearLayout menuItemListLayout = (LinearLayout) horizontalScrollView.getChildAt(0);
-
-    List<Map<String, Object>> customMenuItems = new ArrayList<>();
-    ContextMenuOptions contextMenuOptions = new ContextMenuOptions();
-    if (contextMenu != null) {
-      customMenuItems = (List<Map<String, Object>>) contextMenu.get("menuItems");
-      Map<String, Object> contextMenuOptionsMap = (Map<String, Object>) contextMenu.get("options");
-     if (contextMenuOptionsMap != null) {
-       contextMenuOptions.parse(contextMenuOptionsMap);
-     }
-    }
-    customMenuItems = customMenuItems == null ? new ArrayList<Map<String, Object>>() : customMenuItems;
-
-    if (contextMenuOptions.hideDefaultSystemContextMenuItems == null || !contextMenuOptions.hideDefaultSystemContextMenuItems) {
-      for (int i = 0; i < actionMenu.size(); i++) {
-        final MenuItem menuItem = actionMenu.getItem(i);
-        final int itemId = menuItem.getItemId();
-        final String itemTitle = menuItem.getTitle().toString();
-        TextView text = (TextView) LayoutInflater.from(this.getContext())
-                .inflate(R.layout.floating_action_mode_item, this, false);
-        text.setText(itemTitle);
-        text.setOnClickListener(new OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            hideContextMenu();
-            callback.onActionItemClicked(actionMode, menuItem);
-
-            Map<String, Object> obj = new HashMap<>();
-            if (inAppBrowserActivity != null)
-              obj.put("uuid", inAppBrowserActivity.uuid);
-            obj.put("androidId", itemId);
-            obj.put("iosId", null);
-            obj.put("title", itemTitle);
-            channel.invokeMethod("onContextMenuActionItemClicked", obj);
-          }
-        });
-        if (floatingContextMenu != null) {
-          menuItemListLayout.addView(text);
-        }
-      }
-    }
-
-    for (final Map<String, Object> menuItem : customMenuItems) {
-      final int itemId = (int) menuItem.get("androidId");
-      final String itemTitle = (String) menuItem.get("title");
-      TextView text = (TextView) LayoutInflater.from(this.getContext())
-              .inflate(R.layout.floating_action_mode_item, this, false);
-      text.setText(itemTitle);
-      text.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          hideContextMenu();
-
-          Map<String, Object> obj = new HashMap<>();
-          if (inAppBrowserActivity != null)
-            obj.put("uuid", inAppBrowserActivity.uuid);
-          obj.put("androidId", itemId);
-          obj.put("iosId", null);
-          obj.put("title", itemTitle);
-          channel.invokeMethod("onContextMenuActionItemClicked", obj);
-        }
-      });
-      if (floatingContextMenu != null) {
-        menuItemListLayout.addView(text);
-
-      }
-    }
-
-    final int x = (lastTouch != null) ? lastTouch.x : 0;
-    final int y = (lastTouch != null) ? lastTouch.y : 0;
-    contextMenuPoint = new Point(x, y);
-
-    if (floatingContextMenu != null) {
-      floatingContextMenu.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-        @Override
-        public void onGlobalLayout() {
-          if (floatingContextMenu != null) {
-            floatingContextMenu.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            if (getSettings().getJavaScriptEnabled()) {
-              onScrollStopped();
-            } else {
-              onFloatingActionGlobalLayout(x, y);
-            }
-          }
-        }
-      });
-      addView(floatingContextMenu, new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, x, y));
-      if (hasBeenRemovedAndRebuilt) {
-        sendOnCreateContextMenuEvent();
-      }
-      if (checkContextMenuShouldBeClosedTask != null) {
-        checkContextMenuShouldBeClosedTask.run();
-      }
-    }
-    actionMenu.clear();
-
-    return actionMode;
-  }
-
-  public void onFloatingActionGlobalLayout(int x, int y) {
-    int maxWidth = getWidth();
-    int maxHeight = getHeight();
-    int width = floatingContextMenu.getWidth();
-    int height = floatingContextMenu.getHeight();
-    int curx = x - (width / 2);
-    if (curx < 0) {
-      curx = 0;
-    } else if (curx + width > maxWidth) {
-      curx = maxWidth - width;
-    }
-    // float size = 12 * scale;
-    float cury = y - (height * 1.5f);
-    if (cury < 0) {
-      cury = y + height;
-    }
-
-    updateViewLayout(
-            floatingContextMenu,
-            new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, curx, ((int) cury) + getScrollY())
-    );
-
-    headlessHandler.post(new Runnable() {
-      @Override
-      public void run() {
-        if (floatingContextMenu != null) {
-          floatingContextMenu.setVisibility(View.VISIBLE);
-          floatingContextMenu.animate().alpha(1f).setDuration(100).setListener(null);
-        }
-      }
-    });
-  }
+//  public void onFloatingActionGlobalLayout(int x, int y) {
+//    int maxWidth = getWidth();
+//    int maxHeight = getHeight();
+//    int width = floatingContextMenu.getWidth();
+//    int height = floatingContextMenu.getHeight();
+//    int curx = x - (width / 2);
+//    if (curx < 0) {
+//      curx = 0;
+//    } else if (curx + width > maxWidth) {
+//      curx = maxWidth - width;
+//    }
+//    // float size = 12 * scale;
+//    float cury = y - (height * 1.5f);
+//    if (cury < 0) {
+//      cury = y + height;
+//    }
+//
+//    updateViewLayout(
+//            floatingContextMenu,
+//            new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, curx, ((int) cury) + getScrollY())
+//    );
+//
+//    headlessHandler.post(new Runnable() {
+//      @Override
+//      public void run() {
+//        if (floatingContextMenu != null) {
+//          floatingContextMenu.setVisibility(View.VISIBLE);
+//          floatingContextMenu.animate().alpha(1f).setDuration(100).setListener(null);
+//        }
+//      }
+//    });
+//  }
 
   public void hideContextMenu() {
     removeView(floatingContextMenu);
@@ -1840,44 +1843,44 @@ final public class InAppWebView extends InputAwareWebView {
   }
 
   public void onScrollStopped() {
-    if (floatingContextMenu != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      adjustFloatingContextMenuPosition();
-    }
+//    if (floatingContextMenu != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//      adjustFloatingContextMenuPosition();
+//    }
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-  public void adjustFloatingContextMenuPosition() {
-    evaluateJavascript("(function(){" +
-            "  var selection = window.getSelection();" +
-            "  var rangeY = null;" +
-            "  if (selection != null && selection.rangeCount > 0) {" +
-            "    var range = selection.getRangeAt(0);" +
-            "    var clientRect = range.getClientRects();" +
-            "    if (clientRect.length > 0) {" +
-            "      rangeY = clientRect[0].y;" +
-            "    } else if (document.activeElement) {" +
-            "      var boundingClientRect = document.activeElement.getBoundingClientRect();" +
-            "      rangeY = boundingClientRect.y;" +
-            "    }" +
-            "  }" +
-            "  return rangeY;" +
-            "})();", new ValueCallback<String>() {
-      @Override
-      public void onReceiveValue(String value) {
-        if (floatingContextMenu != null) {
-          if (value != null) {
-            int x = contextMenuPoint.x;
-            int y = (int) ((Float.parseFloat(value) * scale) + (floatingContextMenu.getHeight() / 3.5));
-            contextMenuPoint.y = y;
-            onFloatingActionGlobalLayout(x, y);
-          } else {
-            floatingContextMenu.setVisibility(View.VISIBLE);
-            floatingContextMenu.animate().alpha(1f).setDuration(100).setListener(null);
-          }
-        }
-      }
-    });
-  }
+//  @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+//  public void adjustFloatingContextMenuPosition() {
+//    evaluateJavascript("(function(){" +
+//            "  var selection = window.getSelection();" +
+//            "  var rangeY = null;" +
+//            "  if (selection != null && selection.rangeCount > 0) {" +
+//            "    var range = selection.getRangeAt(0);" +
+//            "    var clientRect = range.getClientRects();" +
+//            "    if (clientRect.length > 0) {" +
+//            "      rangeY = clientRect[0].y;" +
+//            "    } else if (document.activeElement) {" +
+//            "      var boundingClientRect = document.activeElement.getBoundingClientRect();" +
+//            "      rangeY = boundingClientRect.y;" +
+//            "    }" +
+//            "  }" +
+//            "  return rangeY;" +
+//            "})();", new ValueCallback<String>() {
+//      @Override
+//      public void onReceiveValue(String value) {
+//        if (floatingContextMenu != null) {
+//          if (value != null) {
+//            int x = contextMenuPoint.x;
+//            int y = (int) ((Float.parseFloat(value) * scale) + (floatingContextMenu.getHeight() / 3.5));
+//            contextMenuPoint.y = y;
+//            onFloatingActionGlobalLayout(x, y);
+//          } else {
+//            floatingContextMenu.setVisibility(View.VISIBLE);
+//            floatingContextMenu.animate().alpha(1f).setDuration(100).setListener(null);
+//          }
+//        }
+//      }
+//    });
+//  }
 
   @RequiresApi(api = Build.VERSION_CODES.KITKAT)
   public void getSelectedText(final ValueCallback<String> resultCallback) {

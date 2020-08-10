@@ -20,15 +20,17 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.webkit.ConsoleMessage;
-import android.webkit.GeolocationPermissions;
-import android.webkit.JsPromptResult;
-import android.webkit.JsResult;
-import android.webkit.MimeTypeMap;
-import android.webkit.PermissionRequest;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
+import com.tencent.smtt.export.external.interfaces.ConsoleMessage;
+import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
+import com.tencent.smtt.sdk.GeolocationPermissions;
+import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
+import com.tencent.smtt.export.external.interfaces.JsPromptResult;
+import com.tencent.smtt.export.external.interfaces.JsResult;
+import com.tencent.smtt.sdk.MimeTypeMap;
+import com.tencent.smtt.export.external.interfaces.PermissionRequest;
+import com.tencent.smtt.sdk.ValueCallback;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -93,7 +95,8 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
           View.SYSTEM_UI_FLAG_FULLSCREEN;
 
   private View mCustomView;
-  private WebChromeClient.CustomViewCallback mCustomViewCallback;
+//  private WebChromeClient.CustomViewCallback mCustomViewCallback;
+  private IX5WebChromeClient.CustomViewCallback mCustomViewCallback;
   private int mOriginalOrientation;
   private int mOriginalSystemUiVisibility;
 
@@ -141,7 +144,7 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
   }
 
   @Override
-  public void onShowCustomView(final View paramView, final CustomViewCallback paramCustomViewCallback) {
+  public void onShowCustomView(final View paramView,final IX5WebChromeClient.CustomViewCallback paramCustomViewCallback) {
     if (this.mCustomView != null) {
       onHideCustomView();
       return;
@@ -169,6 +172,36 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
       obj.put("uuid", inAppBrowserActivity.uuid);
     channel.invokeMethod("onEnterFullscreen", obj);
   }
+
+//  @Override
+//  public void onShowCustomView(final View paramView, final CustomViewCallback paramCustomViewCallback) {
+//    if (this.mCustomView != null) {
+//      onHideCustomView();
+//      return;
+//    }
+//
+//    Activity activity = inAppBrowserActivity != null ? inAppBrowserActivity : Shared.activity;
+//
+//    View decorView = getRootView();
+//    this.mCustomView = paramView;
+//    this.mOriginalSystemUiVisibility = decorView.getSystemUiVisibility();
+//    this.mOriginalOrientation = activity.getRequestedOrientation();
+//    this.mCustomViewCallback = paramCustomViewCallback;
+//    this.mCustomView.setBackgroundColor(Color.BLACK);
+//
+//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//      decorView.setSystemUiVisibility(FULLSCREEN_SYSTEM_UI_VISIBILITY_KITKAT);
+//    } else {
+//      decorView.setSystemUiVisibility(FULLSCREEN_SYSTEM_UI_VISIBILITY);
+//    }
+//    activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+//    ((FrameLayout) decorView).addView(this.mCustomView, FULLSCREEN_LAYOUT_PARAMS);
+//
+//    Map<String, Object> obj = new HashMap<>();
+//    if (inAppBrowserActivity != null)
+//      obj.put("uuid", inAppBrowserActivity.uuid);
+//    channel.invokeMethod("onEnterFullscreen", obj);
+//  }
 
   @Override
   public boolean onJsAlert(final WebView view, String url, final String message,
@@ -652,7 +685,7 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
   }
 
   @Override
-  public void onGeolocationPermissionsShowPrompt(final String origin, final GeolocationPermissions.Callback callback) {
+  public void onGeolocationPermissionsShowPrompt(final String origin,final GeolocationPermissionsCallback callback) {
     Map<String, Object> obj = new HashMap<>();
     if (inAppBrowserActivity != null)
       obj.put("uuid", inAppBrowserActivity.uuid);
@@ -678,6 +711,34 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
       }
     });
   }
+
+//  @Override
+//  public void onGeolocationPermissionsShowPrompt(final String origin, final GeolocationPermissions.Callback callback) {
+//    Map<String, Object> obj = new HashMap<>();
+//    if (inAppBrowserActivity != null)
+//      obj.put("uuid", inAppBrowserActivity.uuid);
+//    obj.put("origin", origin);
+//    channel.invokeMethod("onGeolocationPermissionsShowPrompt", obj, new MethodChannel.Result() {
+//      @Override
+//      public void success(Object o) {
+//        Map<String, Object> response = (Map<String, Object>) o;
+//        if (response != null)
+//          callback.invoke((String) response.get("origin"), (Boolean) response.get("allow"), (Boolean) response.get("retain"));
+//        else
+//          callback.invoke(origin, false, false);
+//      }
+//
+//      @Override
+//      public void error(String s, String s1, Object o) {
+//        callback.invoke(origin, false, false);
+//      }
+//
+//      @Override
+//      public void notImplemented() {
+//        callback.invoke(origin, false, false);
+//      }
+//    });
+//  }
 
   @Override
   public void onGeolocationPermissionsHidePrompt() {
@@ -786,7 +847,7 @@ public class InAppWebViewChromeClient extends WebChromeClient implements PluginR
     startPhotoPickerIntent(filePathCallback, "");
   }
 
-  protected void openFileChooser(ValueCallback<Uri> filePathCallback, String acceptType, String capture) {
+  public void openFileChooser(ValueCallback<Uri> filePathCallback, String acceptType, String capture) {
     startPhotoPickerIntent(filePathCallback, acceptType);
   }
 

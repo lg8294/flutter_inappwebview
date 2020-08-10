@@ -13,10 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import com.tencent.smtt.sdk.ValueCallback;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
@@ -863,8 +863,8 @@ public class InAppBrowserActivity extends AppCompatActivity implements MethodCha
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public void zoomBy(Float zoomFactor) {
-    if (webView != null)
-      webView.zoomBy(zoomFactor);
+//    if (webView != null)
+//      webView.zoomBy(zoomFactor);
   }
 
   public String getOriginalUrl() {
@@ -889,10 +889,10 @@ public class InAppBrowserActivity extends AppCompatActivity implements MethodCha
 
   public Map<String, Object> getHitTestResult() {
     if (webView != null) {
-      WebView.HitTestResult hitTestResult = webView.getHitTestResult();
+//      WebView.HitTestResult hitTestResult = webView.getHitTestResult();
       Map<String, Object> obj = new HashMap<>();
-      obj.put("type", hitTestResult.getType());
-      obj.put("extra", hitTestResult.getExtra());
+//      obj.put("type", hitTestResult.getType());
+//      obj.put("extra", hitTestResult.getExtra());
       return obj;
     }
     return null;
