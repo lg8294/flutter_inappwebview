@@ -6,10 +6,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
+import com.tencent.smtt.export.external.TbsCoreSettings;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.smtt.sdk.ValueCallback;
 
 import com.pichillilorenzo.flutter_inappwebview.InAppWebView.FlutterWebViewFactory;
+
+import java.util.HashMap;
 
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -57,22 +60,11 @@ public class InAppWebViewFlutterPlugin implements FlutterPlugin, ActivityAware {
 
   private void onAttachedToEngine(Context applicationContext, BinaryMessenger messenger, Activity activity, PlatformViewRegistry platformViewRegistry, FlutterView flutterView) {
 
-    Shared.applicationContext = applicationContext;
-    Shared.activity = activity;
-    Shared.messenger = messenger;
-
-    inAppBrowserManager = new InAppBrowserManager(messenger);
-    headlessInAppWebViewManager = new HeadlessInAppWebViewManager(messenger);
-    chromeSafariBrowserManager = new ChromeSafariBrowserManager(messenger);
-
-    platformViewRegistry.registerViewFactory(
-                    "com.pichillilorenzo/flutter_inappwebview", new FlutterWebViewFactory(messenger, flutterView));
-    inAppWebViewStatic = new InAppWebViewStatic(messenger);
-    myCookieManager = new MyCookieManager(messenger);
-    myWebStorage = new MyWebStorage(messenger);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      credentialDatabaseHandler = new CredentialDatabaseHandler(messenger);
-    }
+    // 在调用TBS初始化、创建WebView之前进行如下配置
+    HashMap map = new HashMap();
+    map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
+    map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, true);
+    QbSdk.initTbsSettings(map);
 
     //搜集本地tbs内核信息并上报服务器，服务器返回结果决定使用哪个内核。
 
@@ -92,6 +84,25 @@ public class InAppWebViewFlutterPlugin implements FlutterPlugin, ActivityAware {
     };
     //x5内核初始化接口
     QbSdk.initX5Environment(applicationContext,  cb);
+
+    Shared.applicationContext = applicationContext;
+    Shared.activity = activity;
+    Shared.messenger = messenger;
+
+    inAppBrowserManager = new InAppBrowserManager(messenger);
+    headlessInAppWebViewManager = new HeadlessInAppWebViewManager(messenger);
+    chromeSafariBrowserManager = new ChromeSafariBrowserManager(messenger);
+
+    platformViewRegistry.registerViewFactory(
+                    "com.pichillilorenzo/flutter_inappwebview", new FlutterWebViewFactory(messenger, flutterView));
+    inAppWebViewStatic = new InAppWebViewStatic(messenger);
+    myCookieManager = new MyCookieManager(messenger);
+    myWebStorage = new MyWebStorage(messenger);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      credentialDatabaseHandler = new CredentialDatabaseHandler(messenger);
+    }
+
+
   }
 
   @Override

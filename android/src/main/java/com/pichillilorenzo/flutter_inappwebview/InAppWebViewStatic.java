@@ -33,8 +33,7 @@ public class InAppWebViewStatic implements MethodChannel.MethodCallHandler {
       case "getDefaultUserAgent":
         result.success(WebSettings.getDefaultUserAgent(Shared.applicationContext));
         break;
-      case "clearClientCertPreferences":
-        result.success(false);
+//      case "clearClientCertPreferences":
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //          WebView.clearClientCertPreferences(new Runnable() {
 //            @Override
@@ -45,7 +44,7 @@ public class InAppWebViewStatic implements MethodChannel.MethodCallHandler {
 //        } else {
 //          result.success(false);
 //        }
-        break;
+//        break;
       case "getSafeBrowsingPrivacyPolicyUrl":
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 && WebViewFeature.isFeatureSupported(WebViewFeature.SAFE_BROWSING_PRIVACY_POLICY_URL)) {
           result.success(WebViewCompat.getSafeBrowsingPrivacyPolicyUrl().toString());

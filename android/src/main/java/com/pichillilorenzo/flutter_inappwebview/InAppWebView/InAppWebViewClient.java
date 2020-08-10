@@ -166,7 +166,35 @@ public class InAppWebViewClient extends WebViewClient {
   public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
     InAppWebView webView = (InAppWebView) view;
+//
+//    String js = getJsString(webView);
+//
+//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//      webView.evaluateJavascript(js, new ValueCallback<String>(){
+//        @Override
+//        public void onReceiveValue(String s) {
+//          Log.e(LOG_TAG, "evaluateJavascript result:"+s);
+//        }
+//      });
+//    } else {
+//      webView.loadUrl("javascript:" + js);
+//    }
 
+    super.onPageStarted(view, url, favicon);
+
+    webView.isLoading = true;
+    if (inAppBrowserActivity != null && inAppBrowserActivity.searchView != null && !url.equals(inAppBrowserActivity.searchView.getQuery().toString())) {
+      inAppBrowserActivity.searchView.setQuery(url, false);
+    }
+
+    Map<String, Object> obj = new HashMap<>();
+    if (inAppBrowserActivity != null)
+      obj.put("uuid", inAppBrowserActivity.uuid);
+    obj.put("url", url);
+    channel.invokeMethod("onLoadStart", obj);
+  }
+
+  private String getJsString(InAppWebView webView) {
     String js = InAppWebView.consoleLogJS.replaceAll("[\r\n]+", "");
     js += JavaScriptBridgeInterface.flutterInAppBroserJSClass.replaceAll("[\r\n]+", "");
     if (webView.options.useShouldInterceptAjaxRequest) {
@@ -186,30 +214,25 @@ public class InAppWebViewClient extends WebViewClient {
     js = InAppWebView.scriptsWrapperJS
             .replace("$PLACEHOLDER_VALUE", js)
             .replaceAll("[\r\n]+", "");
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      webView.evaluateJavascript(js, (ValueCallback<String>) null);
-    } else {
-      webView.loadUrl("javascript:" + js);
-    }
-
-    super.onPageStarted(view, url, favicon);
-
-    webView.isLoading = true;
-    if (inAppBrowserActivity != null && inAppBrowserActivity.searchView != null && !url.equals(inAppBrowserActivity.searchView.getQuery().toString())) {
-      inAppBrowserActivity.searchView.setQuery(url, false);
-    }
-
-    Map<String, Object> obj = new HashMap<>();
-    if (inAppBrowserActivity != null)
-      obj.put("uuid", inAppBrowserActivity.uuid);
-    obj.put("url", url);
-    channel.invokeMethod("onLoadStart", obj);
+    return js;
   }
 
 
   public void onPageFinished(WebView view, String url) {
     final InAppWebView webView = (InAppWebView) view;
+
+    String jsSdk = getJsString(webView);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      webView.evaluateJavascript(jsSdk, new ValueCallback<String>(){
+        @Override
+        public void onReceiveValue(String s) {
+          Log.e(LOG_TAG, "evaluateJavascript result:"+s);
+        }
+      });
+    } else {
+      webView.loadUrl("javascript:" + jsSdk);
+    }
 
     super.onPageFinished(view, url);
 
