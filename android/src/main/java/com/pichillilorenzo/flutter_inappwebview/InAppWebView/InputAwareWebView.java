@@ -102,27 +102,44 @@ public class InputAwareWebView extends WebView {
     // Check to see if the view param is WebView's ThreadedInputConnectionProxyView.
     View previousProxy = threadedInputConnectionProxyView;
     threadedInputConnectionProxyView = view;
+
+    boolean result;
+
     if (previousProxy == view) {
       // This isn't a new ThreadedInputConnectionProxyView. Ignore it.
-      return super.checkInputConnectionProxy(view);
+//      result = view.checkInputConnectionProxy(view);
+      result = super.checkInputConnectionProxy(view);
+      return result;
+//      return super.checkInputConnectionProxy(view);
     }
     if (containerView == null) {
       Log.e(
         LOG_TAG,
         "Can't create a proxy view because there's no container view. Text input may not work.");
-      return super.checkInputConnectionProxy(view);
+//      result = view.checkInputConnectionProxy(view);
+      result = super.checkInputConnectionProxy(view);
+      return result;
+//      return super.checkInputConnectionProxy(view);
     }
 
-    // We've never seen this before, so we make the assumption that this is WebView's
-    // ThreadedInputConnectionProxyView. We are making the assumption that the only view that could
-    // possibly be interacting with the IMM here is WebView's ThreadedInputConnectionProxyView.
+      // We've never seen this before, so we make the assumption that this is WebView's
+      // ThreadedInputConnectionProxyView. We are making the assumption that the only view that could
+      // possibly be interacting with the IMM here is WebView's ThreadedInputConnectionProxyView.
+//    proxyAdapterView =
+//            new ThreadedInputConnectionProxyAdapterView(
+//                    /*containerView=*/ containerView,
+//                    /*targetView=*/ ((WebView) view).getView(),
+//                    /*imeHandler=*/ ((WebView) view).getView().getHandler());
     proxyAdapterView =
-      new ThreadedInputConnectionProxyAdapterView(
-        /*containerView=*/ containerView,
-        /*targetView=*/ view,
-        /*imeHandler=*/ view.getHandler());
+            new ThreadedInputConnectionProxyAdapterView(
+                    /*containerView=*/ containerView,
+                    /*targetView=*/ view,
+                    /*imeHandler=*/ view.getHandler());
     setInputConnectionTarget(/*targetView=*/ proxyAdapterView);
-    return super.checkInputConnectionProxy(view);
+//    result = view.checkInputConnectionProxy(view);
+    result = super.checkInputConnectionProxy(view);
+    return result;
+//    return super.checkInputConnectionProxy(view);
   }
 
   /**

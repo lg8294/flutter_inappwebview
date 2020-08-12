@@ -77,13 +77,20 @@ public class FlutterWebView implements PlatformView, MethodCallHandler  {
 
     // fix https://github.com/pichillilorenzo/flutter_inappwebview/issues/182
     try {
-      Class superClass =  webView.getClass().getSuperclass();
+      View view = webView.getView();
+      Class superClass =  view.getClass().getSuperclass();
       while(!superClass.getName().equals("android.view.View")) {
+//        class com.pichillilorenzo.flutter_inappwebview.InAppWebView.InputAwareWebView
+//        class com.tencent.smtt.sdk.WebView
+//        class android.widget.FrameLayout
+//        class android.view.ViewGroup
+//        class android.view.View
         superClass = superClass.getSuperclass();
       }
       Field mContext = superClass.getDeclaredField("mContext");
       mContext.setAccessible(true);
       mContext.set(webView, context);
+      mContext.set(view,context);
     } catch (Exception e) {
       e.printStackTrace();
       Log.e(LOG_TAG, "Cannot find mContext for this WebView");
@@ -374,15 +381,15 @@ public class FlutterWebView implements PlatformView, MethodCallHandler  {
       case "getContentHeight":
         result.success((webView != null) ? webView.getContentHeight() : null);
         break;
-      case "zoomBy":
+//      case "zoomBy":
 //        if (webView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //          double zoomFactor = (double) call.argument("zoomFactor");
 //          webView.zoomBy((float) zoomFactor);
 //          result.success(true);
 //        } else {
-          result.success(false);
+//          result.success(false);
 //        }
-        break;
+//        break;
       case "getOriginalUrl":
         result.success((webView != null) ? webView.getOriginalUrl() : null);
         break;
