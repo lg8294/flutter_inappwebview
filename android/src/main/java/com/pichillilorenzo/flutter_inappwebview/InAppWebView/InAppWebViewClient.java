@@ -167,6 +167,23 @@ public class InAppWebViewClient extends WebViewClient {
 
     InAppWebView webView = (InAppWebView) view;
 
+    initJSSdk(webView);
+
+    super.onPageStarted(view, url, favicon);
+
+    webView.isLoading = true;
+    if (inAppBrowserActivity != null && inAppBrowserActivity.searchView != null && !url.equals(inAppBrowserActivity.searchView.getQuery().toString())) {
+      inAppBrowserActivity.searchView.setQuery(url, false);
+    }
+
+    Map<String, Object> obj = new HashMap<>();
+    if (inAppBrowserActivity != null)
+      obj.put("uuid", inAppBrowserActivity.uuid);
+    obj.put("url", url);
+    channel.invokeMethod("onLoadStart", obj);
+  }
+
+  private void initJSSdk(InAppWebView webView) {
     String js = InAppWebView.consoleLogJS.replaceAll("[\r\n]+", "");
     js += JavaScriptBridgeInterface.flutterInAppBroserJSClass.replaceAll("[\r\n]+", "");
     if (webView.options.useShouldInterceptAjaxRequest) {
@@ -192,24 +209,13 @@ public class InAppWebViewClient extends WebViewClient {
     } else {
       webView.loadUrl("javascript:" + js);
     }
-
-    super.onPageStarted(view, url, favicon);
-
-    webView.isLoading = true;
-    if (inAppBrowserActivity != null && inAppBrowserActivity.searchView != null && !url.equals(inAppBrowserActivity.searchView.getQuery().toString())) {
-      inAppBrowserActivity.searchView.setQuery(url, false);
-    }
-
-    Map<String, Object> obj = new HashMap<>();
-    if (inAppBrowserActivity != null)
-      obj.put("uuid", inAppBrowserActivity.uuid);
-    obj.put("url", url);
-    channel.invokeMethod("onLoadStart", obj);
   }
 
 
   public void onPageFinished(WebView view, String url) {
     final InAppWebView webView = (InAppWebView) view;
+
+    initJSSdk(webView);
 
     super.onPageFinished(view, url);
 
