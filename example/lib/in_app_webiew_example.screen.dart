@@ -18,7 +18,6 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
   ContextMenu contextMenu;
   String url = "";
   double progress = 0;
-  CookieManager _cookieManager = CookieManager.instance();
 
   @override
   void initState() {
@@ -68,10 +67,22 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
         drawer: myDrawer(context: context),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            final url = 'https://github.com/flutter';
+            final url = 'http://192.168.1.61:8081/';
             final cookies = await CookieManager.instance().getCookies(url: url);
             print(cookies);
-            // CookieManager.instance().setCookie(url: url, name: null, value: null)
+
+            await CookieManager.instance().setCookie(
+              url: url,
+              name: 'test',
+              value: 'test',
+              expiresDate:
+                  DateTime.now().millisecondsSinceEpoch + 60 * 60 * 1000,
+              // maxAge: 5,
+              isHttpOnly: true,
+              // isSecure: true,
+              sameSite: HTTPCookieSameSitePolicy.STRICT,
+              // path: '/abc',
+            );
           },
         ),
         body: SafeArea(
@@ -93,7 +104,7 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
                   BoxDecoration(border: Border.all(color: Colors.blueAccent)),
               child: InAppWebView(
                   contextMenu: contextMenu,
-                  initialUrl: "https://github.com/flutter",
+                  initialUrl: "http://192.168.1.61:8081/",
                   // initialFile: "assets/index.html",
                   initialHeaders: {},
                   initialOptions: InAppWebViewGroupOptions(
